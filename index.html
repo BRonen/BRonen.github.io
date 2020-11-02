@@ -50,7 +50,38 @@
 
       window.addEventListener('load', init);
 
-      function init(){}
+      function init(){
+        axios.get('https://api.github.com/users/BRonen', {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          const User = response.data;
+          console.log(User);
+          State.Profile.setUser(User);
+
+          axios.get(User.repos_url, {
+            headers: {
+              'content-type': 'application/json'
+            }
+          } ).then(response => {
+            const Repos = response.data;
+            console.log(Repos);
+            State.Profile.setRepos(Repos);
+
+            setupDom();
+          });
+        });
+      }
+
+      function setupDom(){
+        let reposHTML = "";
+        State.Profile.Repos.map(repo => {
+          console.log(repo);
+          reposHTML += "<h1>"+repo.name+"</h1><p>"+repo.owner.login+"</p>\n";
+        });
+        document.getElementById('repos').innerHTML = reposHTML;
+      }
 
     </script>
   </head>
