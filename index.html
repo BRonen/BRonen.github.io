@@ -3,33 +3,83 @@
     <title>bronen.github.io</title>
     <style>
       body{
-        padding: 10px;
+        padding: 5px;
         background-color: #101010;
       }
+      *{
+        box-sizing: border-box;
+      }
       #root{
-        padding: 10px;
+        padding: 20px;
         background-color: #333;
         border: 2px solid #222;
         border-radius: 10px;
-      }
-      .Default-button{
-        cursor: pointer;
-        font-size: 80%;
-        border-radius:4px;
-        box-shadow: 1px 1px 2px #666;
-        border:1px solid #aaa;
-        margin-left: 2px;
-        margin-right: 2px;
-        margin-bottom: 10px;
-        background: #222;
-        width: 30px;
-        height: 20px;
-         color: #5b5;
+        display: grid;
+        grid-gap: 10px 10px;
+        justify-content: center;
+        align-content: center;
+        grid-template-areas:
+        'profile_img       buttons buttons buttons buttons buttons buttons buttons buttons buttons'
+        'repositories repositories posts   posts   posts   posts   posts   posts   posts   posts  ';
       }
       header{
         padding-left: 10px;
         height: 100%;
         width: 100%;
+      }
+      #profile_img{
+        grid-area: profile_img;
+        height: 100%;
+        border-radius: 100%;
+        border:2px solid #aaa;
+      }
+      #profile_img:hover {
+        box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+        filter: grayscale(50%);
+      }
+      #buttons_container{
+        grid-area: buttons;
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        scroll:hidden;
+        border-radius: 50px;
+      }
+      .Default-button{
+        padding: 15px;
+        cursor: pointer;
+        width: auto;
+        height: auto;
+        border-radius:4px;
+        box-shadow: 1px 1px 2px #666;
+        border:1px solid #aaa;
+        background: #222;
+        color: #5b5;
+      }
+      .Default-button h1{
+        font-size: 200%;
+      }
+      #repositories{
+        grid-area: repositories;
+        width: 100%;
+        max-height: 30vh;
+        background-color: #ddd;
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+        scroll:hidden;
+        border-radius: 10px;
+      }
+      #teste{
+        grid-area: img;
+      }
+      #posts{
+        background-color: #fff;
+        width: 100%;
+      }
+      h1{
+        background-color: #444;
+        color: #5b5;
       }
     </style>
     <script>
@@ -37,11 +87,13 @@
       const State = {};
 
       State.Profile = {};
+
       State.Profile.User = {};
       State.Profile.setUser = function(newUser){
         State.Profile.User = newUser;
         console.log("Defined User");
       };
+
       State.Profile.Repos = {};
       State.Profile.setRepos = function(newRepos){
         State.Profile.Repos = newRepos;
@@ -75,21 +127,28 @@
       }
 
       function setupDom(){
-        let reposHTML = "";
+        document.getElementById('profile_img').src = State.Profile.User.avatar_url;
+
+        let reposHTML = '';
         State.Profile.Repos.map(repo => {
-          console.log(repo);
-          reposHTML += "<h1>"+repo.name+"</h1><p>"+repo.owner.login+"</p>\n";
+          reposHTML += '<a href="'+repo.html_url+'"><button class="Default-button"><h1>'+repo.name+'</h1><p>'+repo.owner.login+'</p></button></a>\n';
         });
-        document.getElementById('repos').innerHTML = reposHTML;
+        document.getElementById('repositories').innerHTML = reposHTML;
+
+        document.getElementById('buttons_container').innerHTML = '<h1>askdjaosdfhjshdkjfhsdjkfhjksdhfksdjkhfkjhdsjkfhsdkjfh</h1>';
       }
 
     </script>
   </head>
   <body>
     <div id="root">
-      <header id="repos">
-      </header>
-
+      <img id="profile_img" src=""/>
+      <div id="buttons_container"></div>
+      <aside id="repositories">
+      </aside>
+      <div id="posts">
+        asdasdasdasdasd
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
