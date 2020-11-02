@@ -1,7 +1,58 @@
 <!DOCTYPE html>
   <head>
     <title>bronen.github.io</title>
+    <style>
+      body{
+        padding: 10px;
+        background-color: #101010;
+      }
+      #root{
+        padding: 10px;
+        background-color: #333;
+        border: 2px solid #222;
+        border-radius: 10px;
+      }
+      .Default-button{
+        cursor: pointer;
+        font-size: 80%;
+        border-radius:4px;
+        box-shadow: 1px 1px 2px #666;
+        border:1px solid #aaa;
+        margin-left: 2px;
+        margin-right: 2px;
+        margin-bottom: 10px;
+        background: #222;
+        width: 30px;
+        height: 20px;
+         color: #5b5;
+      }
+      header{
+        padding-left: 10px;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+    <script>
 
+      const State = {};
+
+      State.Profile = {};
+      State.Profile.User = {};
+      State.Profile.setUser = function(newUser){
+        State.Profile.User = newUser;
+        console.log("Defined User");
+      };
+      State.Profile.Repos = {};
+      State.Profile.setRepos = function(newRepos){
+        State.Profile.Repos = newRepos;
+        console.log("Defined Repos");
+      };
+
+      window.addEventListener('load', init);
+
+      function init(){}
+
+    </script>
   </head>
   <body>
     <div id="root">
