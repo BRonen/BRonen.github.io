@@ -23,26 +23,28 @@
 
       var parser = document.createElement("a");
       parser.href = window.location.href;
-      State.fileName = parser.search.slice(1);
+      State.params = parser.search.split("=");
 
       window.addEventListener('load', init);
 
       function init(){
-        axios.get('https://raw.githubusercontent.com/BRonen/bronen.github.io/master/posts/'+State.fileName+'.txt', {
-          headers: {
-            'content-type': 'application/json'
-          }
-        } ).then(response => {
-          State.file = response.data;
-          setupDom();
-        });
+        if(State.params[0] == '?post'){
+          axios.get('https://api.github.com/repos/BRonen/bronen.github.io/issues/'+State.params[1], {
+            headers: {
+              'content-type': 'application/json'
+            }
+          } ).then(response => {
+            State.post = response.data;
+            setupDom();
+          });
+        }
       }
 
       function setupDom(){
-        document.title = State.fileName;
-        let res = State.file.split('\n');
-        res.map(line => {
-          document.getElementById('root').innerHTML += "<p>"+line+"</p>";
+        document.title = State.post.title;
+
+        window["markdown"].ready.then(markdown => {
+          document.getElementById('root').innerHTML = markdown.parse(State.post.body);
         });
       }
 
@@ -51,6 +53,7 @@
   <body>
     <div id="root">
     </div>
+    <script src="/node_modules/markdown-wasm/dist/markdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
 </html>
