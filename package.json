@@ -1,0 +1,22 @@
+{
+  "name": "bronen.github.io",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BRonen/bronen.github.io.git"
+  },
+  "author": "Brennopereira6@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BRonen/bronen.github.io/issues"
+  },
+  "homepage": "https://github.com/BRonen/bronen.github.io#readme",
+  "dependencies": {
+    "markdown-wasm": "^1.1.2"
+  }
+}
