@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+  <head>
+    <title>bronen.github.io</title>
+    <style>
+      body{
+        padding: 5px;
+        background-color: #101010;
+      }
+      *{
+        box-sizing: border-box;
+      }
+      #root{
+        color: #5b5;
+        padding: 20px;
+        background-color: #333;
+        border: 2px solid #222;
+        border-radius: 10px;
+      }
+    </style>
+    <script>
+
+      const State = {};
+
+      var parser = document.createElement("a");
+      parser.href = window.location.href;
+      State.fileName = parser.search.slice(1);
+
+      window.addEventListener('load', init);
+
+      function init(){
+        axios.get('https://raw.githubusercontent.com/BRonen/bronen.github.io/master/posts/'+State.fileName+'.txt', {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          State.file = response.data;
+          setupDom();
+        });
+      }
+
+      function setupDom(){
+        document.title = State.fileName;
+        let res = State.file.split('\n');
+        res.map(line => {
+          document.getElementById('root').innerHTML += "<p>"+line+"</p>";
+        });
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="root">
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>
