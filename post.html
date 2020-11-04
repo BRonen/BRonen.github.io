@@ -1,7 +1,6 @@
 <!DOCTYPE html>
   <head>
     <title>bronen.github.io</title>
-    <base href="/bronen.github.io/">
     <style>
       body{
         padding: 5px;
@@ -22,23 +21,43 @@
 
       const State = {};
 
-      var parser = document.createElement("a");
+      const parser = document.createElement("a");
       parser.href = window.location.href;
       State.params = parser.search.split("=");
 
-      window.addEventListener('load', init);
-
-      function init(){
+      window.addEventListener('load', () => {
         if(State.params[0] == '?post'){
-          axios.get('https://api.github.com/repos/BRonen/bronen.github.io/issues/'+State.params[1], {
-            headers: {
-              'content-type': 'application/json'
-            }
-          } ).then(response => {
-            State.post = response.data;
-            setupDom();
-          });
+          renderPost('https://api.github.com/repos/BRonen/bronen.github.io/issues/'+State.params[1]);
         }
+      });
+
+      function renderPost(url){
+        axios.get(url, {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          State.post = response.data;
+          setupDom();
+        }).catch(err => {
+          setupDomError(err);
+        });
+      }
+
+      function renderNext(){
+        const issueNum = 1 + Number(State.params[1]);
+
+        let newHref = window.location.href.slice(0, -1) + issueNum;
+
+        window.location.href = newHref;
+      }
+
+      function renderPrevious(){
+        const issueNum = Number(State.params[1]) - 1;
+
+        let newHref = window.location.href.slice(0, -1) + issueNum;
+
+        window.location.href = newHref;
       }
 
       function setupDom(){
@@ -49,12 +68,21 @@
         });
       }
 
+      function setupDomError(err){
+        document.title = "Post Error";
+
+        document.getElementById('root').innerHTML = err;
+      }
+
     </script>
   </head>
   <body>
+    <a href="/">
+      <button>Home</button>
+    </a>
     <div id="root">
     </div>
-    <!--script src="https://raw.githubusercontent.com/BRonen/bronen.github.io/master/node_modules/markdown-wasm/dist/markdown.js"></script-->
+    <button onClick="renderPrevious()">Previous</button> <button onClick="renderNext()">Next</button>
     <script src="js/markdown/markdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
