@@ -1,0 +1,74 @@
+{
+  "_args": [
+    [
+      "markdown-wasm@1.1.2",
+      "/home/pi/Desktop/br"
+    ]
+  ],
+  "_from": "markdown-wasm@1.1.2",
+  "_id": "markdown-wasm@1.1.2",
+  "_inBundle": false,
+  "_integrity": "sha512-tlepP32bgDetkRxx/neVKvEroQ8bR1PoSKvdrTOE+9j05Uoe9Lq+86E8PAciWQ2xr1EWKueNYMkQOmcPT7EwIg==",
+  "_location": "/markdown-wasm",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "markdown-wasm@1.1.2",
+    "name": "markdown-wasm",
+    "escapedName": "markdown-wasm",
+    "rawSpec": "1.1.2",
+    "saveSpec": null,
+    "fetchSpec": "1.1.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/markdown-wasm/-/markdown-wasm-1.1.2.tgz",
+  "_spec": "1.1.2",
+  "_where": "/home/pi/Desktop/br",
+  "author": {
+    "name": "Rasmus Andersson",
+    "email": "https://rsms.me/"
+  },
+  "browser": "dist/markdown.js",
+  "bugs": {
+    "url": "https://github.com/rsms/markdown-wasm/issues"
+  },
+  "description": "Markdown parser and html generator implemented in WebAssembly",
+  "devDependencies": {
+    "wasmc": "^2.2.0"
+  },
+  "files": [
+    "dist/markdown.wasm",
+    "dist/markdown.js",
+    "dist/markdown.js.map",
+    "dist/markdown.node.js",
+    "dist/markdown.node.js.map",
+    "dist/markdown.es.js",
+    "dist/markdown.es.js.map",
+    "markdown.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "homepage": "https://github.com/rsms/markdown-wasm",
+  "jsnext:main": "dist/markdown.es.js",
+  "license": "MIT",
+  "main": "dist/markdown.node.js",
+  "module": "dist/markdown.es.js",
+  "name": "markdown-wasm",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rsms/markdown-wasm.git"
+  },
+  "scripts": {
+    "build": "wasmc",
+    "build-debug": "wasmc -g",
+    "build-watch": "wasmc -g -w",
+    "print-gzip-size": "echo 'dist/markdown.{js,wasm} gzipped:' $(gzip -9 -c dist/markdown.js dist/markdown.wasm | wc -c | cat) bytes",
+    "test": "wasmc -quiet && bash test/test.sh >/dev/null && echo OK",
+    "update-web": "cp dist/markdown.js dist/markdown.wasm docs/"
+  },
+  "typings": "markdown.d.ts",
+  "version": "1.1.2"
+}
