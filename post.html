@@ -1,6 +1,11 @@
 <!DOCTYPE html>
   <head>
     <title>bronen.github.io</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#202020" />
+
     <style>
       body{
         padding: 5px;
@@ -9,25 +14,83 @@
       *{
         box-sizing: border-box;
       }
-      #root{
-        color: #5b5;
+      header{
+        color: #505050;
         padding: 20px;
-        background-color: #333;
-        border: 2px solid #222;
+        margin-bottom: 0px;
+        background-color: #0a0a0a;
+        border-bottom: 0px;
         border-radius: 10px;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+      }
+      #root{
+        color: #5d5;
+        text-shadow: 2px 1px 4px #000;
+        padding: 20px;
+        padding-top: 5px;
+        margin: 10px;
+        margin-top: 0px;
+        background-color: #0b0b0b;
+        border-top: -5px;
+        border-radius: 0px 0px 10px 10px;
+        box-shadow: 0px 4px 10px #000 inset;
+      }
+      .buttons_container{
+        padding: 0px 20px;
+        margin-top: 30px;
+        border-top: 1px solid #333;
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+      }
+      .buttons_container *{
+        width: 30%;
+        color: #5d5;
+        font-size: 150%;
+        text-decoration: bold;
+        padding: 10px;
+        border-radius: 10px;
+        border: 2px solid #333;
+        background-color: #1a1a1a;
+        margin-top: 20px;
+        text-align: center;
+        cursor: pointer;
+      }
+      a:link, a:visited {
+        color: #5d5;
+        text-decoration: none;
+      }
+      img{
+        width: 100%;
+      }
+      #icon{
+        width: auto;
+        max-height: 10vh;
+        min-height: 100%;
+        margin: 5px;
+        transition-property: transform;
+        transition-duration: 2s;
+      }
+      #icon:hover{
+        transform: rotateZ(360deg);
       }
     </style>
     <script>
 
       const State = {};
 
-      const parser = document.createElement("a");
-      parser.href = window.location.href;
-      State.params = parser.search.split("=");
-
       window.addEventListener('load', () => {
+
+        State.parser = document.createElement("a");
+        State.parser.href = window.location.href;
+        State.params = State.parser.search.split("=");
+
         if(State.params[0] == '?post'){
-          renderPost('https://api.github.com/repos/BRonen/bronen.github.io/issues/'+State.params[1]);
+          renderPost(
+            'https://api.github.com/repos/BRonen/bronen.github.io/issues/'+State.params[1][0]
+          );
         }
       });
 
@@ -40,49 +103,60 @@
           State.post = response.data;
           setupDom();
         }).catch(err => {
-          setupDomError(err);
+          setupError(err);
         });
       }
 
-      function renderNext(){
-        const issueNum = 1 + Number(State.params[1]);
+      function setupError(err){
+        document.title = "Post Error";
 
-        let newHref = window.location.href.slice(0, -1) + issueNum;
+        alert(err);
 
-        window.location.href = newHref;
-      }
+        const issueNum = Number(State.params[1][0]);
 
-      function renderPrevious(){
-        const issueNum = Number(State.params[1]) - 1;
-
-        let newHref = window.location.href.slice(0, -1) + issueNum;
-
-        window.location.href = newHref;
+        if( issueNum <= 0 )
+          window.location.search = '?post=' + (issueNum+1);
+        else
+          window.location.search = '?post=' + (issueNum-1);
       }
 
       function setupDom(){
         document.title = State.post.title;
+        const buttons = '\
+          <div class="buttons_container">\
+            <button onClick="renderPrevious()">←</button>\
+            <a href="#">↑</a>\
+            <button onClick="renderNext()">→</button>\
+          </div>';
 
         window["markdown"].ready.then(markdown => {
-          document.getElementById('root').innerHTML = markdown.parse(State.post.body);
+          document.getElementById('root').innerHTML = markdown.parse(State.post.body)+buttons;
         });
       }
 
-      function setupDomError(err){
-        document.title = "Post Error";
+      function renderNext(){
+        const issueNum = 1 + Number(State.params[1][0]);
 
-        document.getElementById('root').innerHTML = err;
+        window.location.search = '?post='+ issueNum;
+      }
+
+      function renderPrevious(){
+        const issueNum = Number(State.params[1][0]) - 1;
+
+        window.location.search = '?post='+ issueNum;
       }
 
     </script>
   </head>
   <body>
-    <a href="/">
-      <button>Home</button>
-    </a>
+    <header>
+      <a class="logo" href="/">
+        <img id="icon" src="favicon.ico"/>
+      </a>
+    </header>
     <div id="root">
     </div>
-    <button onClick="renderPrevious()">Previous</button> <button onClick="renderNext()">Next</button>
+
     <script src="js/markdown/markdown.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
