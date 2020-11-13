@@ -6,75 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#202020" />
 
+    <link rel="stylesheet" href="styles.css" />
     <style>
-      body{
-        padding: 5px;
-        background-color: #101010;
-      }
-      *{
-        box-sizing: border-box;
-      }
-      header{
-        color: #505050;
-        padding: 20px;
-        margin-bottom: 0px;
-        background-color: #0a0a0a;
-        border-bottom: 0px;
-        border-radius: 10px;
-        display: flex;
-        align-items: stretch;
-        justify-content: space-between;
-      }
-      #root{
-        color: #5d5;
-        text-shadow: 2px 1px 4px #000;
-        padding: 20px;
-        padding-top: 5px;
-        margin: 10px;
-        margin-top: 0px;
-        background-color: #0b0b0b;
-        border-top: -5px;
-        border-radius: 0px 0px 10px 10px;
-        box-shadow: 0px 4px 10px #000 inset;
-      }
-      .buttons_container{
-        padding: 0px 20px;
-        margin-top: 30px;
-        border-top: 1px solid #333;
-        display: flex;
-        justify-content: space-between;
-        align-items: stretch;
-      }
-      .buttons_container *{
-        width: 30%;
-        color: #5d5;
-        font-size: 150%;
-        text-decoration: bold;
-        padding: 10px;
-        border-radius: 10px;
-        border: 2px solid #333;
-        background-color: #1a1a1a;
-        margin-top: 20px;
-        text-align: center;
-        cursor: pointer;
-      }
-      a:link, a:visited {
-        color: #5d5;
-        text-decoration: none;
-      }
-      img{
+      #content img{
         width: 100%;
-      }
-      #icon{
-        width: auto;
-        max-height: 10vh;
-        min-height: 100%;
-        margin: 5px;
-        transition-property: transform;
-        transition-duration: 2s;
-      }
-      #icon:hover{
-        transform: rotateZ(360deg);
       }
     </style>
     <script>
@@ -122,6 +57,7 @@
 
       function setupDom(){
         document.title = State.post.title;
+        document.querySelector('#header-img').src = State.post.user.avatar_url;
         const buttons = '\
           <div class="buttons_container">\
             <button onClick="renderPrevious()">←</button>\
@@ -130,7 +66,7 @@
           </div>';
 
         window["markdown"].ready.then(markdown => {
-          document.getElementById('root').innerHTML = markdown.parse(State.post.body)+buttons;
+          document.querySelector('#content').innerHTML = markdown.parse(State.post.body)+buttons;
         });
       }
 
@@ -150,11 +86,12 @@
   </head>
   <body>
     <header>
-      <a class="logo" href="/">
-        <img id="icon" src="favicon.ico"/>
+      <a href="/">
+        <img id="header-img" src=""/>
       </a>
     </header>
     <div id="root">
+      <div id="content"></div>
     </div>
 
     <script src="js/markdown/markdown.js"></script>
