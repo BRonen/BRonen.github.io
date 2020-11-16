@@ -1,13 +1,12 @@
 body{
   padding: 5px;
-  background-color: #101010;
+  background-color: #999999;
 }
 *{
   box-sizing: border-box;
 }
 header{
-  background-color: #0a0a0a;
-  color: #505050;
+  background-color: #333333;
 
   padding: 20px;
 
@@ -28,7 +27,7 @@ header{
   margin: 5px;
 
   border-radius: 100%;
-  border:2px solid #aaa;
+  border:2px solid #1a1c20;
 
   transition-property: transform;
   transition-duration: 2s;
@@ -38,9 +37,9 @@ header{
 }
 .header-button{
   padding: 0px 15px;
-  background-color: #101010;
+  background-color: #999999;
   border-radius: 10px;
-  box-shadow: 0px 0px 10px #000 inset;
+  box-shadow: 0px 0px 10px #1a1c20 inset;
 }
 #root{
   padding: 20px;
@@ -49,12 +48,10 @@ header{
   margin: 10px;
   margin-top: 0px;
 
-  background-color: #0b0b0b;
-  color: #5d5;
-  text-shadow: 2px 1px 4px #000;
+  background-color: #666666;
 
   border-radius: 0px 0px 10px 10px;
-  box-shadow: 0px 4px 10px #000 inset;
+  box-shadow: 0px 4px 10px #1a1c20 inset;
 }
 ::-webkit-scrollbar {
   width: 10px;
@@ -63,9 +60,9 @@ header{
 ::-webkit-scrollbar-track {
   box-shadow: 1px 1px 2px #000 inset;
   border-radius: 10px;
-  background: #222;
+  background: #666;
 }
 ::-webkit-scrollbar-thumb {
-  background: #101010;
+  background: #333;
   border-radius: 20px;
 }
