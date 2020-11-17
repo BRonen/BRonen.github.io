@@ -33,7 +33,6 @@
         margin-bottom: 10px;
 
         font-size: 90%;
-        text-decoration: bold;
 
         cursor: pointer;
       }
@@ -75,17 +74,27 @@
       .link-post p{
         max-height: 100%;
       }
-      #root{
+      #content{
         display: flex; /*can't stay at styles.css*/
         overflow: hidden;
         scroll:hidden;
         overflow-y: auto;
       }
+      #search-bar{
+        width: 100%;
+        font-size: 100%;
+
+        box-shadow: 0px 0px 10px #1d1d1d inset;
+        border-radius: 10px;
+
+        margin-top: 15px;
+        padding: 5px;
+      }
       a:link,a:visited{
         color: #202020;
       }
       @media (max-width: 600px){
-        #root{
+        #content{
           flex-direction: column-reverse;
         }
         #labels{
@@ -121,6 +130,29 @@
 
       window.addEventListener('load', init);
 
+      function postsSearch(){
+        const string = document.querySelector('#search-bar').value || '';
+        console.log(string);
+        let tmpHTML = '';
+        State.posts.map( post => {
+          if(
+            post.title.toUpperCase()
+             .startsWith(
+              string.toUpperCase()
+            )
+          ){
+            tmpHTML += `<a href="/post.html?post=${post.number}">
+                          <div class="link-post">
+                            <center><h1>${post.title}</h1></center>
+                            <p>${post.body}</p>
+                          </div>
+                        </a>`;
+          }
+          document.querySelector('#posts').innerHTML = tmpHTML;
+        } );
+
+      }
+
       function postsByLabels(label){
         axios.get(`https://api.github.com/repos/BRonen/bronen.github.io/issues?labels=${label}`, {
           headers: {
@@ -137,7 +169,7 @@
                           </div>
                         </a>`;
           });
-          document.getElementById('posts').innerHTML = tmpHTML;
+          document.querySelector('#posts').innerHTML = tmpHTML;
         });
       }
 
@@ -179,7 +211,7 @@
             tmpHTML += `<button onClick="postsByLabels('${label.name}')">${label.name}</button>`
           });
 
-          document.getElementById('labels').innerHTML = tmpHTML;
+          document.querySelector('#labels').innerHTML = tmpHTML;
         });
 
         axios.get('https://api.github.com/repos/BRonen/bronen.github.io/issues?per_page=10', {
@@ -190,6 +222,7 @@
           console.log(response)
           let tmpHTML = '';
           response.data.map(post => {
+            State.posts.push(post);
             tmpHTML += `<a href="/post.html?post=${post.number}">
                           <div class="link-post">
                             <center><h1>${post.title}</h1></center>
@@ -197,7 +230,7 @@
                           </div>
                         </a>`;
           });
-          document.getElementById('posts').innerHTML = tmpHTML;
+          document.querySelector('#posts').innerHTML = tmpHTML;
         });
       }
 
@@ -206,13 +239,16 @@
   <body>
     <header>
       <img id="header-img" src=""/>
-      <a class="header-button" href="/aboutme.html">
+      <a class="header-button" href="https://github.com/bronen">
         <h1>About Me</h1>
       </a>
     </header>
     <div id="root">
-      <aside id="labels"></aside>
-      <div id="posts"></div>
+      <input type="search" id="search-bar" placeholder="Search:" onChange="postsSearch()"/>
+      <div id="content">
+        <aside id="labels"></aside>
+        <div id="posts"></div>
+      </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </body>
