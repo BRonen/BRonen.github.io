@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+  <head>
+    <title>bronen.github.io</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#202020" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      #labels{
+        border-radius: 10px;
+
+        padding: 10px;
+        margin-top: 10px;
+        margin-right: 15px;
+
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+      }
+      #labels *{
+        background: #333;
+        color: #fff;
+
+        border-radius: 20px;
+        box-shadow: 1px 1px 2px #666;
+        border:1px solid #aaa;
+
+        width: 100%;
+
+        padding: 15px;
+        margin-bottom: 10px;
+
+        font-size: 90%;
+
+        cursor: pointer;
+      }
+      #posts{
+        width: 90%;
+      }
+      .link-post{
+        background-color: #999;
+
+        max-height: 45vh;
+
+        white-space: wrap;
+        text-overflow: clip;
+        overflow: hidden;
+
+        margin-top: 20px;
+        padding: 10px;
+
+        box-shadow: 0px 0px 30px #1d1d1d inset;
+        border: 1px solid #aaa;
+        border-radius: 20px;
+      }
+      .link-post:hover{
+        box-shadow: 0px 0px 15px rgba(0, 140, 186, 0.8) inset;
+        border: 1px solid #aad;
+      }
+      .link-post *{
+        border-radius: 20px;
+        text-overflow: ellipsis;
+      }
+      .link-title{
+        background-color: #333;
+        color: #fff;
+
+        padding: 10px;
+
+        box-shadow: 0px 0px 10px #111;
+      }
+      .link-post p{
+        max-height: 100%;
+      }
+      #content{
+        display: flex; /*can't stay at styles.css*/
+        overflow: hidden;
+        scroll:hidden;
+        overflow-y: auto;
+      }
+      #search-bar{
+        width: 100%;
+        font-size: 100%;
+
+        box-shadow: 0px 0px 10px #1d1d1d inset;
+        border-radius: 10px;
+
+        margin-top: 15px;
+        padding: 5px;
+      }
+      a:link,a:visited{
+        color: #202020;
+      }
+      @media (max-width: 600px){
+        #content{
+          flex-direction: column-reverse;
+        }
+        #labels{
+          margin-right: 0px;
+        }
+        #labels *{
+          width: auto;
+        }
+        #posts{
+          width: 100%;
+        }
+      }
+    </style>
+    <script>
+
+      const State = {};
+
+      State.Profile = {};
+
+      State.Profile.User = {};
+      State.Profile.setUser = function(newUser){
+        State.Profile.User = newUser;
+        console.log("Defined User");
+      };
+
+      State.Profile.Repos = {};
+      State.Profile.setRepos = function(newRepos){
+        State.Profile.Repos = newRepos;
+        console.log("Defined Repos");
+      };
+
+      State.posts = [];
+
+      window.addEventListener('load', init);
+
+      function postsSearch(){
+        const string = document.querySelector('#search-bar').value || '';
+        console.log(string);
+        let tmpHTML = '';
+        State.posts.map( post => {
+          if(
+            post.title.toUpperCase()
+             .startsWith(
+              string.toUpperCase()
+            )
+          ){
+            tmpHTML += `<a href="/post.html?post=${post.number}">
+                          <div class="link-post">
+                            <center><h1>${post.title}</h1></center>
+                            <p>${post.body}</p>
+                          </div>
+                        </a>`;
+          }
+          document.querySelector('#posts').innerHTML = tmpHTML;
+        } );
+
+      }
+
+      function postsByLabels(label){
+        axios.get(`https://api.github.com/repos/BRonen/bronen.github.io/issues?labels=${label}`, {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          console.log(response)
+          let tmpHTML = '';
+          response.data.map(post => {
+            tmpHTML += `<a href="/post.html?post=${post.number}">
+                          <div class="link-post">
+                            <center><h1>${post.title}</h1></center>
+                            <p>${post.body}</p>
+                          </div>
+                        </a>`;
+          });
+          document.querySelector('#posts').innerHTML = tmpHTML;
+        });
+      }
+
+      function init(){
+        axios.get('https://api.github.com/users/BRonen', {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          const User = response.data;
+          console.log(User);
+          State.Profile.setUser(User);
+
+          axios.get(User.repos_url, {
+            headers: {
+              'content-type': 'application/json'
+            }
+          } ).then(response => {
+            const Repos = response.data;
+            console.log(Repos);
+            State.Profile.setRepos(Repos);
+
+            setupDom();
+          });
+        });
+      }
+
+      function setupDom(){
+
+        axios.get('https://api.github.com/repos/BRonen/bronen.github.io/labels', {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          let tmpHTML = '';
+
+          response.data.map(label => {
+            tmpHTML += `<button onClick="postsByLabels('${label.name}')">${label.name}</button>`
+          });
+
+          document.querySelector('#labels').innerHTML = tmpHTML;
+        });
+
+        axios.get('https://api.github.com/repos/BRonen/bronen.github.io/issues?per_page=10', {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          console.log(response)
+          let tmpHTML = '';
+          response.data.map(post => {
+            State.posts.push(post);
+            tmpHTML += `<a href="/post.html?post=${post.number}">
+                          <div class="link-post">
+                            <center><h1>${post.title}</h1></center>
+                            <p>${post.body}</p>
+                          </div>
+                        </a>`;
+          });
+          document.querySelector('#posts').innerHTML = tmpHTML;
+        });
+      }
+
+    </script>
+  </head>
+  <body>
+    <header>
+      <a href="https://github.com/BRonen">
+        <img id="header-img" src="https://avatars.githubusercontent.com/u/33203683?v=4"/>
+      </a>
+      <a class="header-button" href="/aboutme.html">
+        <h1>About Me</h1>
+      </a>
+    </header>
+    <div id="root">
+      <input type="search" id="search-bar" placeholder="Search:" onChange="postsSearch()"/>
+      <div id="content">
+        <aside id="labels"></aside>
+        <div id="posts"></div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>
