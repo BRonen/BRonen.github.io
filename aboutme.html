@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>bronen.github.io/README.md</title>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#202020" />
+
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+      #content img{
+        width: 100%;
+      }
+      .buttons-container{
+        padding: 0px 20px;
+        margin-top: 30px;
+        border-top: 1px solid #333;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: stretch;
+      }
+      .buttons-container *{
+        width: 30%;
+        font-size: 150%;
+
+        text-decoration: none; /*remove underline from <a> up arrow */
+        text-decoration: bold;
+
+        color: #202020;
+
+        border-radius: 10px;
+        border: 1px solid #333;
+        background-color: #999;
+        box-shadow: 1px 1px 3px #101010;
+
+        padding: 10px;
+
+        margin-top: 20px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .buttons-container *:hover{
+        background-color: #aaa;
+        box-shadow: 1px 1px 3px #bbb;
+      }
+    </style>
+    <script>
+
+      const State = {};
+
+      window.addEventListener('load', () => {
+        renderPost(
+          'https://raw.githubusercontent.com/BRonen/bronen.github.io/master/README.md'
+        );
+      });
+
+      function renderPost(url){
+        axios.get(url, {
+          headers: {
+            'content-type': 'application/json'
+          }
+        } ).then(response => {
+          State.post = response.data;
+          setupDom();
+        }).catch(err => {
+          setupError(err);
+        });
+      }
+
+      function setupError(err){
+        document.title = "Post Error";
+
+        alert(err);
+      }
+
+      function setupDom(){
+        console.log(State);
+
+        window["markdown"].ready.then(markdown => {
+          document.querySelector('#content').innerHTML = markdown.parse(State.post);
+        });
+      }
+
+    </script>
+  </head>
+  <body>
+    <header>
+      <a href="/">
+        <img id="header-img" src="https://avatars.githubusercontent.com/u/33203683?v=4"/>
+      </a>
+    </header>
+    <div id="root">
+      <div id="content"></div>
+    </div>
+    
+    <script src="js/markdown/markdown.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  </body>
+</html>
+
