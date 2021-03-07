@@ -198,7 +198,6 @@
       }
 
       function setupDom(){
-        document.getElementById('header-img').src = State.Profile.User.avatar_url;
 
         axios.get('https://api.github.com/repos/BRonen/bronen.github.io/labels', {
           headers: {
@@ -238,8 +237,10 @@
   </head>
   <body>
     <header>
-      <img id="header-img" src=""/>
-      <a class="header-button" href="https://github.com/bronen">
+      <a href="https://github.com/BRonen">
+        <img id="header-img" src="https://avatars.githubusercontent.com/u/33203683?v=4"/>
+      </a>
+      <a class="header-button" href="/aboutme.html">
         <h1>About Me</h1>
       </a>
     </header>
